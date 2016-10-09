@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "24.0.2"
-
+    tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
     defaultConfig {
         applicationId "com.example.administrator.tullingrobot"
         minSdkVersion 15
