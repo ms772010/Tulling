@@ -7,7 +7,7 @@ import android.os.AsyncTask;
  */
 public class HttpData extends AsyncTask<String,Void,String> {
 
-
+    private HttpClient mHttpClient;
     @Override
     protected String doInBackground(String... params) {
         return null;
