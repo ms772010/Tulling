@@ -16,13 +16,14 @@ import java.net.MalformedURLException;
  * Created by Administrator on 2016/10/9 0009.
  */
 public class HttpData extends AsyncTask<String,Void,String> {
-    private String requesturl;//requesturl是图灵接口地址
+    private String requesturl="http://www.tuling123.com/openapi/api";//requesturl是图灵接口地址
     private URL url=null;
     private HttpURLConnection urlConnection=null;
     public HttpData(String requesturl){
         this.requesturl=requesturl;
     }
     @Override
+    //http://www.tuling123.com/openapi/api
     protected String doInBackground(String... params) {
         try {
             url =new URL(requesturl);
@@ -37,10 +38,10 @@ public class HttpData extends AsyncTask<String,Void,String> {
             urlConnection.setChunkedStreamingMode(0);
 
             OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-            writeStream(out);
+            writeStream(out);   //写要发送给网站的数据，写为json格式
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            readStream(in);
+            readStream(in);    //读网站传回的json数据，输出string
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,5 +51,12 @@ public class HttpData extends AsyncTask<String,Void,String> {
 
 
         return null;
+    }
+
+    private void writeStream(OutputStream out) {
+    }
+
+    private void readStream(InputStream in){
+
     }
 }
