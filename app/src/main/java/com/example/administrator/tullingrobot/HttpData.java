@@ -23,30 +23,28 @@ public class HttpData extends AsyncTask<String,Void,String> {
     private String myword;
     private URL url=null;
     private HttpURLConnection urlConnection=null;
-    public HttpData(String mywords){
+    private String returnword;
+    private HttpGetDataListener Listener;
+    public HttpData(String mywords,HttpGetDataListener Listener){
         this.myword=mywords;
+        this.Listener=Listener;
     }
+
     @Override
     //http://www.tuling123.com/openapi/api
     protected String doInBackground(String... params) {
         try {
             url =new URL("http://www.tuling123.com/openapi/api");
             urlConnection=(HttpURLConnection)url.openConnection();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try{
             urlConnection.setDoOutput(true);
             urlConnection.setChunkedStreamingMode(0);
 
             OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-            writeStream(out);   //写要发送给网站的数据，写为json格式
+           writeStream(out);   //写要发送给网站的数据，写为json格式
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            readStream(in);    //读网站传回的json数据，输出string
-
+            returnword=readStream(in);    //读网站传回的json数据，输出string
+            return returnword;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -55,6 +53,12 @@ public class HttpData extends AsyncTask<String,Void,String> {
 
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        Listener.getDataUrl(result);
+        super.onPostExecute(result);
     }
 
     private void writeStream(OutputStream out)throws IOException{
