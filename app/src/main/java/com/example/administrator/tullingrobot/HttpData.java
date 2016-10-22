@@ -34,17 +34,25 @@ public class HttpData extends AsyncTask<String,Void,String> {
     //http://www.tuling123.com/openapi/api
     protected String doInBackground(String... params) {
         try {
-            url =new URL("http://www.tuling123.com/openapi/api");
+            url =new URL("http://www.tuling123.com/openapi/api?key=eb25a2730cad4c85bfa1031bd7e617ea&info=hello");
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setChunkedStreamingMode(0);
 
-            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-           writeStream(out);   //写要发送给网站的数据，写为json格式
+            //OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+           //writeStream(out);   //写要发送给网站的数据，写为json格式
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            returnword=readStream(in);    //读网站传回的json数据，输出string
-            return returnword;
+            int i;
+            String content="";
+            while ((i=in.read())!=-1){
+                content=content+(char)i;
+            }
+            return content;
+
+            //returnword=readStream(in);    //读网站传回的json数据，输出string
+            //return returnword;
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
