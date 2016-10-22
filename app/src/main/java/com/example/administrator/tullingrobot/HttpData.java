@@ -43,15 +43,15 @@ public class HttpData extends AsyncTask<String,Void,String> {
            //writeStream(out);   //写要发送给网站的数据，写为json格式
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            int i;
+            /*int i;
             String content="";
             while ((i=in.read())!=-1){
                 content=content+(char)i;
             }
             return content;
-
-            //returnword=readStream(in);    //读网站传回的json数据，输出string
-            //return returnword;
+            */
+            returnword=readStream(in);    //读网站传回的json数据，输出string
+            return returnword;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class HttpData extends AsyncTask<String,Void,String> {
         reader.beginObject();
         while (reader.hasNext()){
             String name = reader.nextName();
-            if(name.equals("info")){
+            if(name.equals("text")){
                 robotsword=reader.nextString();
             }
             else{
