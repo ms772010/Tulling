@@ -34,7 +34,7 @@ public class HttpData extends AsyncTask<String,Void,String> {
     //http://www.tuling123.com/openapi/api
     protected String doInBackground(String... params) {
         try {
-            url =new URL("http://www.tuling123.com/openapi/api?key=eb25a2730cad4c85bfa1031bd7e617ea&info=hello");
+            url =new URL("http://www.tuling123.com/openapi/api?key=eb25a2730cad4c85bfa1031bd7e617ea&info="+myword);
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setChunkedStreamingMode(0);

@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myHttpData=(HttpData) new HttpData("ok",this).execute();
+        myHttpData=(HttpData) new HttpData("你好",this).execute();
 
     }
 
