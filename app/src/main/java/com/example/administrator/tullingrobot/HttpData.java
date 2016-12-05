@@ -50,7 +50,7 @@ public class HttpData extends AsyncTask<String,Void,String> {
             }
             return content;
             */
-            returnword=readStream(in);    //读网站传回的json数据，输出string
+            returnword=MainActivity.readStream(in);    //读网站传回的json数据，输出string
             return returnword;
 
         } catch (IOException e) {
@@ -69,7 +69,7 @@ public class HttpData extends AsyncTask<String,Void,String> {
         super.onPostExecute(result);
     }
 
-    private void writeStream(OutputStream out)throws IOException{
+   /* private void writeStream(OutputStream out)throws IOException{
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
         writer.setIndent("  ");
         writer.beginObject();
@@ -79,20 +79,6 @@ public class HttpData extends AsyncTask<String,Void,String> {
         writer.endObject();
 
     }
+*/
 
-    private String readStream(InputStream in) throws IOException{
-        String robotsword = null;
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        reader.beginObject();
-        while (reader.hasNext()){
-            String name = reader.nextName();
-            if(name.equals("text")){
-                robotsword=reader.nextString();
-            }
-            else{
-                reader.skipValue();
-            }
-        }
-        return robotsword;
-    }
 }
