@@ -13,5 +13,6 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="50dp"
     android:layout_toRightOf="@+id/iv"
-    android:background=""/>
+    android:background="@drawable/left"
+    android:gravity="center"/>
 </RelativeLayout>
