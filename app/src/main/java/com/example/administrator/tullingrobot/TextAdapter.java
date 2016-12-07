@@ -15,11 +15,13 @@ import java.util.List;
  */
 public class TextAdapter extends BaseAdapter {
     private List<ListData> lists;
+
     private Context context;
-    RelativeLayout layout=new RelativeLayout(context);
+    private RelativeLayout layout;
     public TextAdapter(List<ListData> lists,Context context){
         this.lists=lists;
         this.context=context;
+        this.layout=new RelativeLayout(this.context);
     }
     @Override
     public int getCount() {
