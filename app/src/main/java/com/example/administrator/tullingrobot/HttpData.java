@@ -1,19 +1,11 @@
 package com.example.administrator.tullingrobot;
 
 import android.os.AsyncTask;
-import android.util.JsonReader;
-import android.util.JsonWriter;
-
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 
 /**
@@ -43,13 +35,7 @@ public class HttpData extends AsyncTask<String,Void,String> {
            //writeStream(out);   //写要发送给网站的数据，写为json格式
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            /*int i;
-            String content="";
-            while ((i=in.read())!=-1){
-                content=content+(char)i;
-            }
-            return content;
-            */
+
             returnword=MainActivity.readStream(in);    //读网站传回的json数据，输出string
             return returnword;
 
@@ -69,16 +55,6 @@ public class HttpData extends AsyncTask<String,Void,String> {
         super.onPostExecute(result);
     }
 
-   /* private void writeStream(OutputStream out)throws IOException{
-        JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
-        writer.setIndent("  ");
-        writer.beginObject();
-        writer.name("key").value("eb25a2730cad4c85bfa1031bd7e617ea");
-        writer.name("info").value(myword);
-        writer.name("userid").value("12345678");
-        writer.endObject();
 
-    }
-*/
 
 }
