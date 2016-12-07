@@ -2,15 +2,12 @@ package com.example.administrator.tullingrobot;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonReader;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,35 +36,23 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
         adapter=new TextAdapter(lists,this);
         lv.setAdapter(adapter);
     }
-    public static String readStream(InputStream in) throws IOException {
-        String robotsword = null;
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        reader.beginObject();
-        while (reader.hasNext()){
-            String name = reader.nextName();
-            if(name.equals("text")){
-                robotsword=reader.nextString();
-            }
-            else{
-                reader.skipValue();
-            }
-        }
-        return robotsword;
-    }
+
     @Override
     public void getDataUrl(String data) {
-        System.out.println(data);
+
         ListData listData=new ListData(data,ListData.RECEIVER);
         lists.add(listData);
-
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onClick(View v) {
+
         context_str=sendText.getText().toString();
-        myHttpData=(HttpData) new HttpData(context_str,this).execute();
         ListData listData=new ListData(context_str,ListData.SEND);
         lists.add(listData);
         adapter.notifyDataSetChanged();
+        myHttpData=(HttpData) new HttpData(context_str,this).execute();
+
     }
 }

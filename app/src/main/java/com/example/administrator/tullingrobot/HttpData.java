@@ -1,9 +1,12 @@
 package com.example.administrator.tullingrobot;
 
 import android.os.AsyncTask;
+import android.util.JsonReader;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -31,12 +34,9 @@ public class HttpData extends AsyncTask<String,Void,String> {
             urlConnection.setDoOutput(true);
             urlConnection.setChunkedStreamingMode(0);
 
-            //OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-           //writeStream(out);   //写要发送给网站的数据，写为json格式
-
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-            returnword=MainActivity.readStream(in);    //读网站传回的json数据，输出string
+            returnword=readStream(in);    //读网站传回的json数据，输出string
             return returnword;
 
         } catch (IOException e) {
@@ -54,7 +54,21 @@ public class HttpData extends AsyncTask<String,Void,String> {
         Listener.getDataUrl(result);
         super.onPostExecute(result);
     }
-
+    public  String readStream(InputStream in) throws IOException {
+        String robotsword = null;
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        reader.beginObject();
+        while (reader.hasNext()){
+            String name = reader.nextName();
+            if(name.equals("text")){
+                robotsword=reader.nextString();
+            }
+            else{
+                reader.skipValue();
+            }
+        }
+        return robotsword;
+    }
 
 
 }
