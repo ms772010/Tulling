@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
     private Bitmap head;
     private SharedPreferences sharedPreferences;
     private Editor editor;
+    private long time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,8 +123,9 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
 
         ListData listData=new ListData(data,ListData.RECEIVER);
         lists.add(listData);
-        editor.putString("name","robot");
-        editor.putString("receiveword",listData.getContent());
+        time=System.currentTimeMillis();
+
+        editor.putString(String.valueOf(time),"机器人："+listData.getContent());
         editor.commit();
         adapter.notifyDataSetChanged();
     }
@@ -134,8 +136,9 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
         context_str=sendText.getText().toString();
         ListData listData=new ListData(context_str,ListData.SEND);
         lists.add(listData);
-        editor.putString("name","me");
-        editor.putString("sendword",listData.getContent());
+        time=System.currentTimeMillis();
+
+        editor.putString(String.valueOf(time),"我："+listData.getContent());
         editor.commit();
         adapter.notifyDataSetChanged();
         myHttpData=(HttpData) new HttpData(context_str,this).execute();
