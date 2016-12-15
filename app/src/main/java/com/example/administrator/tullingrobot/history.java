@@ -5,6 +5,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import java.util.Map;
@@ -20,6 +21,7 @@ public class history extends AppCompatActivity {
         sp= getSharedPreferences("history", Context.MODE_PRIVATE);
         map=sp.getAll();
         mytextview= (TextView) findViewById(R.id.textView);
+        mytextview.setMovementMethod(ScrollingMovementMethod.getInstance()) ;
         /*Editor editor=sp.edit();
         editor.clear();
         editor.commit();*/
