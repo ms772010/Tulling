@@ -1,6 +1,5 @@
 package com.example.administrator.tullingrobot;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,11 +10,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +27,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 
+import com.turing.androidsdk.InitListener;
+import com.turing.androidsdk.SDKInit;
+import com.turing.androidsdk.SDKInitBuilder;
+import com.turing.androidsdk.TuringApiManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,8 +42,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HttpGetDataListener,View.OnClickListener {
-    private HttpData myHttpData;
+import turing.os.http.core.ErrorMessage;
+import turing.os.http.core.HttpConnectionListener;
+import turing.os.http.core.RequestResult;
+
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
     private List<ListData> lists;
     private ListView lv;
     private EditText sendText;
@@ -48,22 +61,22 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
     private SharedPreferences sharedPreferences;
     private Editor editor;
     private long time;
+
+    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TURING_APIKEY = "eb25a2730cad4c85bfa1031bd7e617ea" ;
+    private final String TURING_SECRET ="07469a7b2b93eddc";
+    private final String UNIQUEID = "1313131314";
+    private TuringApiManager mTuringApiManager;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().hide();//隐藏actionbar
-        //ActionBar actionBar = getSupportActionBar();
         setContentView(R.layout.activity_main);
-
-        initView();
-
-
+        init();
     }
-    /**
-     * @param menu
-     * @return
-     * 使用菜单
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -93,14 +106,33 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
 
 
 
-    private void initView(){
+
+
+    private void init(){
+
+        SDKInitBuilder builder=new SDKInitBuilder(this)
+                .setSecret(TURING_SECRET).setTuringKey(TURING_APIKEY).setUniqueId(UNIQUEID);
+        SDKInit.init(builder,new InitListener(){
+            @Override
+            public void onFail(String error) {
+                Log.d(TAG, error);
+            }
+            @Override
+            public void onComplete() {
+                // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
+                mTuringApiManager = new TuringApiManager(MainActivity.this);
+                mTuringApiManager.setHttpListener(myHttpConnectionListener);
+
+            }
+        });
+
+
+
         sharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
         editor=sharedPreferences.edit();
-
         lv= (ListView) findViewById(R.id.lv);
         sendText= (EditText) findViewById(R.id.sendText);
         sendButton= (Button) findViewById(R.id.sendBtn);
-
         lists=new ArrayList<ListData>();
         sendButton.setOnClickListener(this);
         adapter=new TextAdapter(lists,this);
@@ -116,19 +148,49 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
         }
 
 
+
+
+
     }
 
-    @Override
-    public void getDataUrl(String data) {
 
-        ListData listData=new ListData(data,ListData.RECEIVER);
-        lists.add(listData);
-        time=System.currentTimeMillis();
+    HttpConnectionListener myHttpConnectionListener = new HttpConnectionListener() {
 
-        editor.putString(String.valueOf(time),"机器人："+listData.getContent());
-        editor.commit();
-        adapter.notifyDataSetChanged();
-    }
+        @Override
+        public void onSuccess(RequestResult result) {
+            if (result != null) {
+                try {
+                    Log.d(TAG, result.getContent().toString());
+                    JSONObject result_obj = new JSONObject(result.getContent()
+                            .toString());
+                    if (result_obj.has("text")) {
+                        Log.d(TAG, result_obj.get("text").toString());
+                        ListData listData=new ListData(result_obj.get("text").toString(),ListData.RECEIVER);
+                        lists.add(listData);
+                        time=System.currentTimeMillis();
+
+                        editor.putString(String.valueOf(time),"机器人："+listData.getContent());
+                        editor.commit();
+                        adapter.notifyDataSetChanged();
+
+                    }
+                } catch (JSONException e) {
+                    Log.d(TAG, "JSONException:" + e.getMessage());
+                }
+            }
+
+        }
+
+        @Override
+        public void onError(ErrorMessage errorMessage) {
+            Log.d(TAG, errorMessage.getMessage());
+        }
+    };
+
+
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -141,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements HttpGetDataListen
         editor.putString(String.valueOf(time),"我："+listData.getContent());
         editor.commit();
         adapter.notifyDataSetChanged();
-        myHttpData=(HttpData) new HttpData(context_str,this).execute();
+        mTuringApiManager.requestTuringAPI(context_str);
+        sendText.setText("");
 
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

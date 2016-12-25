@@ -1,7 +1,7 @@
 package com.example.administrator.tullingrobot;
 
 import android.content.Context;
-import android.content.SharedPreferences.Editor;
+
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,9 +22,7 @@ public class history extends AppCompatActivity {
         map=sp.getAll();
         mytextview= (TextView) findViewById(R.id.textView);
         mytextview.setMovementMethod(ScrollingMovementMethod.getInstance()) ;
-        /*Editor editor=sp.edit();
-        editor.clear();
-        editor.commit();*/
+
         for (Map.Entry entry : map.entrySet()) {
 
             Object key = entry.getKey( );
