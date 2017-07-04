@@ -1,5 +1,7 @@
 # Tulling
-the tulling chatting robot in andorid   
+the tulling chatting robot in andorid    
+   
+install app-release-xx.apk on your mobile phone  
 
 using old andorid sdk  
 
