@@ -1,4 +1,6 @@
 # Tulling
-the tulling chatting robot in andorid
-图灵聊天机器人
-参考了视频代码，但是加了些新功能，改变了通信方式
+the tulling chatting robot in andorid  
+using old andorid sdk
+may not be useful
+download  old andorid sdk
+download  latest andorid sdk https://github.com/turing-robot/sdk-android
